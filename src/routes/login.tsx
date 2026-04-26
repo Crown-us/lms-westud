@@ -66,6 +66,9 @@ function LoginPage() {
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            role: selectedRole // Pass role to callback if needed
+          }
         },
       })
       if (error) throw error
@@ -80,6 +83,9 @@ function LoginPage() {
         provider: 'github',
         options: {
           redirectTo: `${window.location.origin}/auth/callback`,
+          queryParams: {
+            role: selectedRole
+          }
         },
       })
       if (error) throw error
