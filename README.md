@@ -1,73 +1,73 @@
-# React + TypeScript + Vite
+# 🎓 WeStud LMS - Modern Learning Management System
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+WeStud adalah platform Learning Management System (LMS) modern yang dirancang untuk memberikan pengalaman belajar yang interaktif dan seamless. Dibangun dengan teknologi terkini untuk performa maksimal dan user experience yang luar biasa.
 
-Currently, two official plugins are available:
+![License](https://img.shields.io/badge/license-MIT-blue.svg)
+![React](https://img.shields.io/badge/React-19-61DAFB?logo=react)
+![TypeScript](https://img.shields.io/badge/TypeScript-5-3178C6?logo=typescript)
+![Vite](https://img.shields.io/badge/Vite-6-646CFF?logo=vite)
+![Supabase](https://img.shields.io/badge/Supabase-Database-3ECF8E?logo=supabase)
+![TailwindCSS](https://img.shields.io/badge/Tailwind-CSS-38B2AC?logo=tailwind-css)
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+## 🚀 Fitur Utama
 
-## React Compiler
+- **Dashboard Interaktif**: Manajemen kursus, tugas, dan jadwal dalam satu tempat.
+- **Sistem Mentor**: Terhubung langsung dengan mentor ahli di bidangnya.
+- **Course Management**: Alur belajar yang terstruktur mulai dari pendaftaran hingga sertifikasi.
+- **Visual 3D & Animasi**: Pengalaman visual memukau menggunakan Three.js dan Framer Motion.
+- **Responsive Design**: Akses lancar dari perangkat mobile maupun desktop.
+- **Role-based Access**: Dashboard khusus untuk siswa dan pengelola.
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+## 🛠️ Tech Stack
 
-## Expanding the ESLint configuration
+- **Frontend**: [React 19](https://react.dev/) + [TypeScript](https://www.typescriptlang.org/)
+- **Routing**: [TanStack Router](https://tanstack.com/router) (Type-safe routing)
+- **State Management & Data Fetching**: [TanStack Query](https://tanstack.com/query)
+- **Backend-as-a-Service**: [Supabase](https://supabase.com/) (Auth, Database, Storage)
+- **Styling**: [Tailwind CSS](https://tailwindcss.com/) + [Shadcn UI](https://ui.shadcn.com/)
+- **Animation**: [Framer Motion](https://www.framer.com/motion/), [GSAP](https://gsap.com/), & [Three.js](https://threejs.org/)
+- **Build Tool**: [Vite](https://vitejs.dev/)
 
-If you are developing a production application, we recommend updating the configuration to enable type-aware lint rules:
+## 📦 Instalasi
 
-```js
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
+1. **Clone Repository**
+   ```bash
+   git clone https://github.com/Crown-us/lms-westud.git
+   cd lms-westud
+   ```
 
-      // Remove tseslint.configs.recommended and replace with this
-      tseslint.configs.recommendedTypeChecked,
-      // Alternatively, use this for stricter rules
-      tseslint.configs.strictTypeChecked,
-      // Optionally, add this for stylistic rules
-      tseslint.configs.stylisticTypeChecked,
+2. **Install Dependensi**
+   ```bash
+   npm install
+   ```
 
-      // Other configs...
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
+3. **Konfigurasi Environment**
+   Salin `.env.example` menjadi `.env` dan isi kredensial Supabase Anda:
+   ```env
+   VITE_SUPABASE_URL=your_supabase_url
+   VITE_SUPABASE_ANON_KEY=your_supabase_anon_key
+   ```
+
+4. **Jalankan Mode Development**
+   ```bash
+   npm run dev
+   ```
+
+## 🏗️ Struktur Folder
+
+```text
+src/
+├── components/     # Reusable UI components (Shadcn)
+├── lib/            # Utility functions & Supabase client
+├── routes/         # File-based routing (TanStack Router)
+├── assets/         # Images, icons, and 3D models
+└── main.tsx        # Entry point
 ```
 
-You can also install [eslint-plugin-react-x](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-x) and [eslint-plugin-react-dom](https://github.com/Rel1cx/eslint-react/tree/main/packages/plugins/eslint-plugin-react-dom) for React-specific lint rules:
+## 🚀 Deployment
 
-```js
-// eslint.config.js
-import reactX from 'eslint-plugin-react-x'
-import reactDom from 'eslint-plugin-react-dom'
+Proyek ini siap untuk di-deploy ke **Vercel**. Pastikan untuk menambahkan environment variables (`VITE_SUPABASE_URL` dan `VITE_SUPABASE_ANON_KEY`) di dashboard Vercel Anda.
 
-export default defineConfig([
-  globalIgnores(['dist']),
-  {
-    files: ['**/*.{ts,tsx}'],
-    extends: [
-      // Other configs...
-      // Enable lint rules for React
-      reactX.configs['recommended-typescript'],
-      // Enable lint rules for React DOM
-      reactDom.configs.recommended,
-    ],
-    languageOptions: {
-      parserOptions: {
-        project: ['./tsconfig.node.json', './tsconfig.app.json'],
-        tsconfigRootDir: import.meta.dirname,
-      },
-      // other options...
-    },
-  },
-])
-```
+---
+
+Made with ❤️ by [Crown-us](https://github.com/Crown-us)
