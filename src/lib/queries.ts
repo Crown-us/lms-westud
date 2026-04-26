@@ -82,7 +82,7 @@ export const dashboardQueries = {
             .in('course_id', courses.map(c => c.id))
             .order('enrolled_at', { ascending: false })
             .limit(5)
-          recentSales = data || []
+          recentSales = (data as any[]) || []
         }
 
         return {
