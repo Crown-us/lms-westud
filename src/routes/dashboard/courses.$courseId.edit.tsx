@@ -34,7 +34,8 @@ function EditCoursePage() {
     category: 'Web Development',
     price_monthly: '',
     description: '',
-    image_url: ''
+    image_url: '',
+    status: 'draft'
   })
 
   const handlePriceChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -61,7 +62,8 @@ function EditCoursePage() {
         category: data.category,
         price_monthly: data.price_monthly,
         description: data.description || '',
-        image_url: data.image_url || ''
+        image_url: data.image_url || '',
+        status: data.status || 'draft'
       })
       return data
     }
@@ -94,7 +96,6 @@ function EditCoursePage() {
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['course-edit', courseId] })
       toast.success('Info kursus berhasil diperbarui!')
-      navigate({ to: '/dashboard/courses/$courseId/manage', params: { courseId } })
     },
     onError: (err: any) => toast.error('Gagal update: ' + err.message)
   })
@@ -104,9 +105,9 @@ function EditCoursePage() {
       <div className="flex items-center justify-between text-left">
         <div className="space-y-1 text-left">
           <Link to="/dashboard/courses/$courseId/manage" params={{ courseId }} className="flex items-center gap-2 text-red-600 font-bold text-sm hover:underline mb-4 text-left">
-            <ChevronLeft className="w-4 h-4" /> Kembali
+            <ChevronLeft className="w-4 h-4" /> Kembali ke Manajemen Materi
           </Link>
-          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left">Edit Kursus ✏️</h1>
+          <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left">Edit Info Kursus ✏️</h1>
         </div>
       </div>
 
@@ -131,6 +132,21 @@ function EditCoursePage() {
             <div className="space-y-6 text-left">
               <div className="space-y-2 text-left">
                 <div className="flex items-center gap-2 mb-2 text-left">
+                   <ImageIcon className="w-3.5 h-3.5 text-red-600" />
+                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">Status Visibilitas</label>
+                </div>
+                <select 
+                   value={formData.status} 
+                   onChange={e => setFormData(prev => ({ ...prev, status: e.target.value }))}
+                   className="w-full h-12 rounded-xl border-2 border-slate-100 dark:border-slate-800 dark:bg-slate-800 dark:text-white px-3 font-bold text-sm outline-none focus:border-red-600 text-left"
+                >
+                   <option value="draft">Draft (Privat)</option>
+                   <option value="published">Published (Publik)</option>
+                </select>
+              </div>
+
+              <div className="space-y-2 text-left">
+                <div className="flex items-center gap-2 mb-2 text-left">
                   <ImageIcon className="w-3.5 h-3.5 text-red-600" />
                   <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest text-left">Cover</label>
                 </div>
@@ -138,17 +154,27 @@ function EditCoursePage() {
                 <label className="cursor-pointer text-left">
                   <div className="flex items-center justify-center gap-2 h-12 rounded-xl border-2 border-dashed text-xs font-bold text-slate-500 text-left">
                     {isUploading ? <Loader2 className="w-4 h-4 animate-spin" /> : <Upload className="w-4 h-4" />}
-                    Upload
+                    Ganti Cover
                   </div>
                   <input type="file" className="hidden text-left" accept="image/*" onChange={handleFileUpload} />
                 </label>
               </div>
+
               <div className="space-y-2 text-left">
+                <label className="text-[10px] font-black text-slate-400 uppercase tracking-widest ml-1 text-left">Harga</label>
                 <Input required value={formData.price_monthly} onChange={handlePriceChange} className="h-12 rounded-xl font-bold text-left" />
               </div>
-              <Button type="submit" disabled={updateMutation.isPending || isUploading} className="w-full h-14 bg-red-600 text-white rounded-2xl font-black text-lg text-left">
-                {updateMutation.isPending ? <Loader2 className="animate-spin" /> : 'Simpan'}
-              </Button>
+
+              <div className="flex flex-col gap-3 pt-2 text-left">
+                <Button type="submit" disabled={updateMutation.isPending || isUploading} className="w-full h-14 bg-red-600 text-white rounded-2xl font-black text-lg text-left shadow-lg shadow-red-100 dark:shadow-none">
+                  {updateMutation.isPending ? <Loader2 className="animate-spin" /> : 'Simpan Perubahan'}
+                </Button>
+                <Link to="/dashboard/courses/$courseId/manage" params={{ courseId }}>
+                  <Button type="button" variant="outline" className="w-full h-12 rounded-2xl font-black text-xs uppercase tracking-widest text-left">
+                    Kelola Materi Bab & Kuis
+                  </Button>
+                </Link>
+              </div>
             </div>
           </Card>
         </div>

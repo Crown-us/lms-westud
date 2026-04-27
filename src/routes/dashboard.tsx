@@ -171,7 +171,7 @@ function DashboardLayout() {
 }
 
 export const Route = createFileRoute('/dashboard')({
-  beforeLoad: ({ context, location }) => {
+  beforeLoad: async ({ context, location }) => {
     if (context.auth.isLoading) return
 
     if (!context.auth.user) {
@@ -181,6 +181,22 @@ export const Route = createFileRoute('/dashboard')({
           redirect: location.href,
         },
       })
+    }
+
+    // Role-based protection
+    const { data: profile } = await supabase
+      .from('profiles')
+      .select('role')
+      .eq('id', context.auth.user.id)
+      .single()
+
+    const isGuruPath = location.pathname.includes('/courses/create') || 
+                      location.pathname.includes('/manage') ||
+                      location.pathname.includes('/edit') ||
+                      location.pathname.includes('/students')
+
+    if (isGuruPath && profile?.role !== 'guru') {
+      throw redirect({ to: '/dashboard' })
     }
   },
   loader: async ({ context: { queryClient, auth } }) => {
