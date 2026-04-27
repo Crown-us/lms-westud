@@ -218,5 +218,4 @@ export const Route = createFileRoute('/dashboard')({
   },
   component: DashboardLayout,
   pendingComponent: DashboardPending,
-})DashboardPending,
 })
