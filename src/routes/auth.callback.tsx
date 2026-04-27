@@ -1,4 +1,4 @@
-import { createFileRoute, useNavigate } from '@tanstack/react-router'
+import { createFileRoute, useNavigate, useRouteContext } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
@@ -8,57 +8,38 @@ function AuthCallbackPage() {
   const navigate = useNavigate()
   const search = Route.useSearch()
   const queryClient = useQueryClient()
+  const { auth } = useRouteContext({ from: '/auth/callback' })
 
   useEffect(() => {
     const handleAuth = async () => {
-      // 1. Pastikan Session sudah ada
       const { data: { session } } = await supabase.auth.getSession()
       
       if (session) {
-        // Ambil role dari URL atau LocalStorage
         const role = search.role || localStorage.getItem('pending_role')
         
         if (role) {
-          console.log("Memulai sinkronisasi role ke:", role)
-          
-          // 2. Panggil Fungsi SQL Nuklir (RPC)
-          // Kita pakai RPC supaya bypass RLS dan dieksekusi di sisi server database
-          const { error: rpcError } = await supabase.rpc('set_user_role', { 
-            target_role: role 
-          })
-
-          if (rpcError) {
-            console.error("RPC Error, mencoba cara manual:", rpcError)
-            // Backup cara manual kalau RPC belum dipasang
-            await supabase.from('profiles').update({ role }).eq('id', session.user.id)
-          }
-
-          // 3. Update metadata auth user (buat jaga-jaga)
+          // 1. Update DB & Auth Metadata
+          await supabase.rpc('set_user_role', { target_role: role })
           await supabase.auth.updateUser({ data: { role } })
-          
-          // 4. Bersihkan memori
           localStorage.removeItem('pending_role')
           
-          // 5. PENTING: Paksa hapus cache profil agar aplikasi narik data terbaru (GURU)
-          await queryClient.invalidateQueries({ queryKey: ['profile'] })
-          await queryClient.refetchQueries({ queryKey: ['profile', session.user.id] })
+          // 2. Refresh Profile di AuthProvider (ini kuncinya!)
+          await auth.refreshProfile()
           
-          console.log("Sinkronisasi Berhasil!")
+          // 3. Invalidate query cache
+          await queryClient.invalidateQueries({ queryKey: ['profile'] })
         }
         
-        // Kasih jeda sedikit biar state di AuthProvider sempet ke-reset
         setTimeout(() => {
           navigate({ to: '/dashboard' })
-        }, 1500)
+        }, 500)
       } else {
-        // Tunggu sebentar kalau session belum muncul (biasa di mobile)
-        const timeout = setTimeout(() => navigate({ to: '/login' }), 5000)
-        return () => clearTimeout(timeout)
+        navigate({ to: '/login' })
       }
     }
 
     handleAuth()
-  }, [navigate, search.role, queryClient])
+  }, [navigate, search.role, queryClient, auth])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">

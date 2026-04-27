@@ -8,6 +8,7 @@ interface AuthContextType {
   session: Session | null
   isLoading: boolean
   signOut: () => Promise<void>
+  refreshProfile: () => Promise<void>
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
@@ -18,20 +19,23 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const [session, setSession] = useState<Session | null>(null)
   const [isLoading, setIsLoading] = useState(true)
 
+  const fetchProfile = async (userId: string) => {
+    const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single()
+    if (error) console.error('Profile fetch error:', error)
+    setProfile(data)
+    setIsLoading(false)
+  }
+
+  const refreshProfile = async () => {
+    if (user) {
+      const { data } = await supabase.from('profiles').select('*').eq('id', user.id).single()
+      setProfile(data)
+    }
+  }
+
   useEffect(() => {
-    // Consolidated auth logic
     let mounted = true
 
-    const fetchProfile = async (userId: string) => {
-      const { data, error } = await supabase.from('profiles').select('*').eq('id', userId).single()
-      if (mounted) {
-        if (error) console.error('Profile fetch error:', error)
-        setProfile(data)
-        setIsLoading(false)
-      }
-    }
-
-    // Listen for auth changes (this triggers on initial load too!)
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       if (!mounted) return
 
@@ -58,7 +62,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }
 
   return (
-    <AuthContext.Provider value={{ user, profile, session, isLoading, signOut }}>
+    <AuthContext.Provider value={{ user, profile, session, isLoading, signOut, refreshProfile }}>
       {children}
     </AuthContext.Provider>
   )
