@@ -131,10 +131,10 @@ function DashboardLayout() {
       </aside>
 
       {/* Main Content Area */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
         <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-4 lg:px-8 shrink-0">
-          <div className="flex items-center gap-4 flex-1 text-left">
+          <div className="flex items-center gap-4 flex-1 text-left min-w-0">
              <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="lg:hidden rounded-xl shrink-0">
                 <Menu className="w-5 h-5" />
              </Button>
@@ -150,7 +150,7 @@ function DashboardLayout() {
              </form>
           </div>
 
-          <div className="flex items-center gap-4 md:gap-6">
+          <div className="flex items-center gap-4 md:gap-6 shrink-0">
             <ModeToggle />
 
             <Button variant="ghost" size="icon" className="relative text-slate-500 dark:text-slate-400 rounded-xl">
@@ -159,27 +159,27 @@ function DashboardLayout() {
             </Button>
 
             <div className="flex items-center gap-3 pl-4 border-l dark:border-slate-800">
-              <div className="hidden sm:block text-right text-left">
-                <div className="text-sm font-bold text-slate-800 dark:text-white">{userName}</div>
+              <div className="hidden sm:block text-right">
+                <div className="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[120px]">{userName}</div>
                 <div className="text-[10px] font-black uppercase tracking-widest text-red-500 dark:text-red-400">{userRole}</div>
               </div>
               <Avatar className="h-10 w-10 border-2 border-red-100 dark:border-red-900/50 p-0.5 rounded-full">
                 <AvatarImage src={userAvatar} className="rounded-full" />
-                <AvatarFallback className="rounded-full">{userName.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="rounded-full font-bold">{userName.charAt(0)}</AvatarFallback>
               </Avatar>
             </div>
           </div>
         </header>
 
         {/* Animated Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-8 text-left relative bg-slate-50/50 dark:bg-slate-950">
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 text-left bg-slate-50/50 dark:bg-slate-950">
            <AnimatePresence mode="wait">
               <motion.div
                 key={location.pathname}
-                initial={{ opacity: 0, y: 10, scale: 0.99 }}
-                animate={{ opacity: 1, y: 0, scale: 1 }}
-                exit={{ opacity: 0, y: -10, scale: 0.99 }}
-                transition={{ duration: 0.3, ease: "easeInOut" }}
+                initial={{ opacity: 0, y: 10 }}
+                animate={{ opacity: 1, y: 0 }}
+                exit={{ opacity: 0, y: -10 }}
+                transition={{ duration: 0.2 }}
                 className="h-full"
               >
                  <Outlet />

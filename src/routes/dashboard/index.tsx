@@ -58,14 +58,14 @@ function DashboardHome() {
   if (role === 'guru' && guruStats) {
     const gData = guruStats
     return (
-      <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1400px] mx-auto space-y-6 pb-10">
+      <motion.div variants={container} initial="hidden" animate="show" className="w-full space-y-6 pb-10">
         <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2 text-left">
           <div className="text-left">
             <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left">Dashboard Guru 👨‍🏫</h1>
             <p className="text-slate-500 dark:text-slate-400 font-medium text-left">Selamat datang, {userName}. Mari lihat performa kursus Anda.</p>
           </div>
-          <Link to="/dashboard/courses/create">
-            <Button className="bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black px-6 h-12 shadow-lg shadow-red-100 dark:shadow-none">
+          <Link to="/dashboard/courses/create" className="shrink-0">
+            <Button className="bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black px-6 h-12 shadow-lg shadow-red-100 dark:shadow-none w-full md:w-auto">
                + Buat Kursus Baru
             </Button>
           </Link>
@@ -78,15 +78,15 @@ function DashboardHome() {
              { label: 'Rating Rata-rata', value: gData.stats.courseRating, icon: Star, color: 'text-yellow-600', bg: 'bg-yellow-50 dark:bg-yellow-900/20' },
              { label: 'Kursus Aktif', value: gData.stats.activeCourses, icon: BookOpen, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-900/20' },
            ].map((stat, i) => (
-             <motion.div key={i} variants={item}>
-                <Card className="border-none shadow-sm rounded-[2rem] bg-white dark:bg-slate-900 p-5 md:p-6 overflow-hidden relative">
+             <motion.div key={i} variants={item} className="min-w-0">
+                <Card className="border-none shadow-sm rounded-[2rem] bg-white dark:bg-slate-900 p-5 md:p-6 overflow-hidden relative h-full">
                    <div className="flex items-center gap-4 relative z-10">
-                      <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl`}>
+                      <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl shrink-0`}>
                          <stat.icon className="w-6 h-6" />
                       </div>
-                      <div className="text-left overflow-hidden">
+                      <div className="text-left overflow-hidden min-w-0">
                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">{stat.label}</div>
-                         <div className="text-2xl font-black text-slate-800 dark:text-white text-left whitespace-nowrap">{stat.value}</div>
+                         <div className="text-xl md:text-2xl font-black text-slate-800 dark:text-white text-left truncate">{stat.value}</div>
                       </div>
                    </div>
                 </Card>
@@ -95,20 +95,20 @@ function DashboardHome() {
         </div>
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-           <motion.div variants={item} className="lg:col-span-2">
-              <Card className="h-full border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-8 md:p-10 text-left">
-                 <div className="flex items-center justify-between mb-8">
+           <motion.div variants={item} className="lg:col-span-2 min-w-0">
+              <Card className="h-full border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-6 md:p-10 text-left overflow-hidden">
+                 <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 mb-8">
                     <h3 className="text-xl font-black text-slate-800 dark:text-white uppercase tracking-tight text-left">Statistik Pertumbuhan</h3>
-                    <Button variant="ghost" size="sm" className="text-red-600 font-bold">Detail <ChevronRight className="w-4 h-4 ml-1" /></Button>
+                    <Button variant="ghost" size="sm" className="text-red-600 font-bold w-fit">Detail <ChevronRight className="w-4 h-4 ml-1" /></Button>
                  </div>
-                 <div className="h-[300px] flex items-end gap-3 px-4">
+                 <div className="h-[250px] md:h-[300px] flex items-end gap-2 md:gap-3 px-2">
                     {[40, 65, 50, 85, 90, 70, 60, 45, 100, 75, 80, 95].map((h, i) => (
-                       <div key={i} className="flex-1 bg-red-50 dark:bg-slate-800 rounded-t-xl relative group">
+                       <div key={i} className="flex-1 bg-red-50 dark:bg-slate-800 rounded-t-lg md:rounded-t-xl relative group">
                           <motion.div 
                             initial={{ height: 0 }} 
                             animate={{ height: `${h}%` }} 
                             transition={{ delay: 0.5 + (i * 0.05) }}
-                            className="absolute bottom-0 w-full bg-red-600 rounded-t-xl" 
+                            className="absolute bottom-0 w-full bg-red-600 rounded-t-lg md:rounded-t-xl" 
                           />
                        </div>
                     ))}
@@ -116,22 +116,22 @@ function DashboardHome() {
               </Card>
            </motion.div>
 
-           <motion.div variants={item}>
-              <Card className="h-full border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-8 text-left">
+           <motion.div variants={item} className="min-w-0">
+              <Card className="h-full border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-6 md:p-8 text-left">
                  <h3 className="text-lg font-black text-slate-800 dark:text-white mb-6 uppercase tracking-tight text-left">Pendaftaran Terbaru</h3>
                  <div className="space-y-6 text-left">
                     {gData.recentSales.length > 0 ? gData.recentSales.map((sale: any, i: number) => (
-                       <div key={i} className="flex items-center justify-between group cursor-pointer text-left">
-                          <div className="flex items-center gap-4">
-                             <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-black">
+                       <div key={i} className="flex items-center justify-between group cursor-pointer text-left min-w-0 gap-2">
+                          <div className="flex items-center gap-3 md:gap-4 min-w-0">
+                             <div className="w-10 h-10 rounded-full bg-slate-100 dark:bg-slate-800 flex items-center justify-center text-xs font-black shrink-0">
                                 {sale.name.charAt(0)}
                              </div>
-                             <div className="text-left">
-                                <div className="text-sm font-black text-slate-800 dark:text-white">{sale.name}</div>
-                                <div className="text-[10px] font-bold text-slate-400">Daftar {sale.course}</div>
+                             <div className="text-left min-w-0">
+                                <div className="text-sm font-black text-slate-800 dark:text-white truncate">{sale.name}</div>
+                                <div className="text-[10px] font-bold text-slate-400 truncate">Daftar {sale.course}</div>
                              </div>
                           </div>
-                          <div className="text-[10px] font-black text-red-600">{sale.date}</div>
+                          <div className="text-[10px] font-black text-red-600 shrink-0">{sale.date}</div>
                        </div>
                     )) : (
                       <p className="text-slate-400 text-sm font-medium py-10 text-center">Belum ada pendaftaran baru.</p>
