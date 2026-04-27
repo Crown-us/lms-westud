@@ -58,11 +58,11 @@ function DashboardHome() {
   if (role === 'guru' && guruStats) {
     const gData = guruStats
     return (
-      <motion.div variants={container} initial="hidden" animate="show" className="w-full space-y-6 pb-10">
-        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2 text-left">
-          <div className="text-left">
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left">Dashboard Guru 👨‍🏫</h1>
-            <p className="text-slate-500 dark:text-slate-400 font-medium text-left">Selamat datang, {userName}. Mari lihat performa kursus Anda.</p>
+      <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1400px] mx-auto space-y-6 pb-10">
+        <div className="flex flex-col md:flex-row md:items-end justify-between gap-4 mb-2">
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Dashboard Guru 👨‍🏫</h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Selamat datang, {userName}. Mari lihat performa kursus Anda.</p>
           </div>
           <Link to="/dashboard/courses/create" className="shrink-0">
             <Button className="bg-red-600 hover:bg-red-700 text-white rounded-2xl font-black px-6 h-12 shadow-lg shadow-red-100 dark:shadow-none w-full md:w-auto">
@@ -71,7 +71,7 @@ function DashboardHome() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6">
            {[
              { label: 'Total Murid', value: gData.stats.totalStudents, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
              { label: 'Estimasi Pendapatan', value: gData.stats.revenue, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
@@ -84,9 +84,9 @@ function DashboardHome() {
                       <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl shrink-0`}>
                          <stat.icon className="w-6 h-6" />
                       </div>
-                      <div className="text-left overflow-hidden min-w-0">
+                      <div className="overflow-hidden min-w-0">
                          <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest truncate">{stat.label}</div>
-                         <div className="text-xl md:text-2xl font-black text-slate-800 dark:text-white text-left truncate">{stat.value}</div>
+                         <div className="text-xl md:text-2xl font-black text-slate-800 dark:text-white truncate">{stat.value}</div>
                       </div>
                    </div>
                 </Card>
@@ -149,14 +149,14 @@ function DashboardHome() {
     const sData = studentStats
     return (
       <motion.div variants={container} initial="hidden" animate="show" className="max-w-[1400px] mx-auto space-y-8 pb-10">
-        <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4 text-left">
-          <div className="text-left">
-            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight text-left">Halo, {userName}! 👋</h1>
-            <p className="text-slate-500 dark:text-slate-400 font-medium text-left">Lanjutkan belajarmu hari ini.</p>
+        <motion.div variants={item} className="flex flex-col md:flex-row md:items-end justify-between gap-4">
+          <div>
+            <h1 className="text-3xl font-black text-slate-900 dark:text-white tracking-tight">Halo, {userName}! 👋</h1>
+            <p className="text-slate-500 dark:text-slate-400 font-medium">Lanjutkan belajarmu hari ini.</p>
           </div>
-          <div className="flex items-center gap-2 text-xs font-black text-slate-500 bg-white dark:bg-slate-900 px-5 py-3 rounded-2xl shadow-sm border border-slate-50 dark:border-slate-800 text-left">
+          <div className="flex items-center gap-2 text-xs font-black text-slate-500 bg-white dark:bg-slate-900 px-5 py-3 rounded-2xl shadow-sm border border-slate-50 dark:border-slate-800">
              <CalendarIcon className="w-4 h-4 text-red-600" />
-             <span className="uppercase tracking-widest text-left">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
+             <span className="uppercase tracking-widest">{new Date().toLocaleDateString('id-ID', { weekday: 'long', day: 'numeric', month: 'long' })}</span>
           </div>
         </motion.div>
 
@@ -168,9 +168,9 @@ function DashboardHome() {
                      <div className="bg-orange-50 dark:bg-orange-900/30 text-orange-500 w-fit p-3 rounded-xl">
                         <Clock className="w-5 h-5" />
                      </div>
-                     <div className="text-left">
-                        <div className="text-3xl font-black text-left">{sData.stats.hours}</div>
-                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 text-left">Total Waktu Belajar</div>
+                     <div>
+                        <div className="text-3xl font-black">{sData.stats.hours}</div>
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Total Waktu Belajar</div>
                      </div>
                   </Card>
                </motion.div>
@@ -179,29 +179,29 @@ function DashboardHome() {
                      <div className="bg-green-50 dark:bg-green-900/30 text-green-500 w-fit p-3 rounded-xl">
                         <CheckCircle2 className="w-5 h-5" />
                      </div>
-                     <div className="text-left">
-                        <div className="text-3xl font-black text-left">{sData.stats.completed}</div>
-                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1 text-left">Kursus Diselesaikan</div>
+                     <div>
+                        <div className="text-3xl font-black">{sData.stats.completed}</div>
+                        <div className="text-[10px] font-black text-slate-400 uppercase tracking-widest mt-1">Kursus Diselesaikan</div>
                      </div>
                   </Card>
                </motion.div>
             </div>
 
             <motion.div variants={item} className="space-y-6">
-               <h3 className="text-xl font-black uppercase tracking-tight text-left">Kursus Berjalan</h3>
+               <h3 className="text-xl font-black uppercase tracking-tight">Kursus Berjalan</h3>
                <div className="space-y-4">
                   {sData.recentCourses.length > 0 ? sData.recentCourses.map((enroll: any) => (
                     <Link key={enroll.id} to="/dashboard/courses/$courseId/learn" params={{ courseId: enroll.course.id.toString() }}>
                       <Card className="border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-6 hover:shadow-xl transition-all group">
                          <div className="flex flex-col md:flex-row gap-6">
                             <img src={enroll.course.image_url} className="w-full md:w-32 aspect-video md:aspect-square object-cover rounded-2xl" alt="course" />
-                            <div className="flex-1 space-y-4 text-left">
-                               <div className="space-y-1 text-left">
+                            <div className="flex-1 space-y-4">
+                               <div className="space-y-1">
                                   <Badge className="bg-red-50 text-red-600 border-none text-[9px] font-black uppercase">{enroll.course.category}</Badge>
-                                  <h4 className="text-lg font-black group-hover:text-red-600 transition-colors text-left">{enroll.course.title}</h4>
+                                  <h4 className="text-lg font-black group-hover:text-red-600 transition-colors">{enroll.course.title}</h4>
                                </div>
-                               <div className="space-y-2 text-left">
-                                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400 text-left">
+                               <div className="space-y-2">
+                                  <div className="flex justify-between text-[10px] font-black uppercase tracking-widest text-slate-400">
                                      <span>Progres</span>
                                      <span className="text-red-600">{enroll.progress}%</span>
                                   </div>
@@ -230,12 +230,12 @@ function DashboardHome() {
             </motion.div>
           </div>
 
-          <div className="space-y-8 text-left">
+          <div className="space-y-8">
              <motion.div variants={item}>
                 <Card className="border-none shadow-sm rounded-[2.5rem] bg-red-600 p-8 text-white space-y-6 relative overflow-hidden group">
                    <div className="relative z-10 space-y-4">
-                      <h3 className="text-2xl font-black leading-tight italic text-left">Tingkatkan <br/> Skill Kamu!</h3>
-                      <p className="text-red-100 text-sm font-medium opacity-80 text-left">Dapatkan akses ke materi premium dan sertifikat internasional.</p>
+                      <h3 className="text-2xl font-black leading-tight italic">Tingkatkan <br/> Skill Kamu!</h3>
+                      <p className="text-red-100 text-sm font-medium opacity-80">Dapatkan akses ke materi premium dan sertifikat internasional.</p>
                       <Button className="w-full h-12 bg-white text-red-600 rounded-xl font-black text-xs uppercase tracking-widest hover:bg-red-50">Upgrade Pro</Button>
                    </div>
                    <Award className="absolute -bottom-6 -right-6 w-32 h-32 text-white/10 group-hover:rotate-12 transition-transform duration-700" />
@@ -244,12 +244,12 @@ function DashboardHome() {
 
              <motion.div variants={item}>
                 <Card className="border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-8 space-y-6">
-                   <h3 className="text-sm font-black uppercase tracking-widest text-left">Teman Belajar</h3>
+                   <h3 className="text-sm font-black uppercase tracking-widest">Teman Belajar</h3>
                    <div className="space-y-4">
                       {[1, 2, 3, 4].map(i => (
                          <div key={i} className="flex items-center gap-3">
                             <img src={`https://i.pravatar.cc/100?u=${i+20}`} className="w-10 h-10 rounded-xl object-cover" alt="friend" />
-                            <div className="flex-1 text-left">
+                            <div className="flex-1">
                                <div className="text-xs font-black">User {i}</div>
                                <div className="text-[9px] font-bold text-green-500 uppercase">Sedang Belajar</div>
                             </div>

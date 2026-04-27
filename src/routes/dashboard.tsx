@@ -1,5 +1,5 @@
 import * as React from 'react'
-import { createFileRoute, Link, Outlet, useLocation, useNavigate, redirect, useRouteContext } from '@tanstack/react-router'
+import { createFileRoute, Link, Outlet, useNavigate, redirect, useRouteContext } from '@tanstack/react-router'
 import { 
   LayoutDashboard, 
   BookOpen, 
@@ -37,7 +37,6 @@ function DashboardPending() {
 
 function DashboardLayout() {
   const [isSidebarOpen, setIsSidebarOpen] = React.useState(false)
-  const location = useLocation()
   const navigate = useNavigate()
   const [globalSearch, setGlobalSearch] = React.useState('')
   const { auth } = useRouteContext({ from: '/dashboard' })
@@ -133,49 +132,52 @@ function DashboardLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-4 lg:px-8 shrink-0">
-          <div className="flex items-center gap-4 flex-1 text-left min-w-0">
-             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="lg:hidden rounded-xl shrink-0">
-                <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
-             </Button>
-             
-             <form onSubmit={handleSearch} className="relative w-full max-w-xl hidden sm:block">
-                <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
-                <Input 
-                  value={globalSearch}
-                  onChange={(e) => setGlobalSearch(e.target.value)}
-                  placeholder="Cari kursus Anda..." 
-                  className="pl-12 h-11 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus-visible:ring-red-600 focus-visible:bg-white dark:focus-visible:bg-slate-700 transition-all w-full dark:text-white font-bold"
-                />
-             </form>
-          </div>
+        <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 shrink-0">
+          <div className="max-w-[1400px] mx-auto w-full h-full flex items-center justify-between px-4 lg:px-8">
+            <div className="flex items-center gap-4 flex-1 text-left min-w-0">
+               <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="lg:hidden rounded-xl shrink-0">
+                  <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
+               </Button>
+               
+               <form onSubmit={handleSearch} className="relative w-full max-w-xl hidden sm:block">
+                  <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
+                  <Input 
+                    value={globalSearch}
+                    onChange={(e) => setGlobalSearch(e.target.value)}
+                    placeholder="Cari kursus Anda..." 
+                    className="pl-12 h-11 bg-slate-50 dark:bg-slate-800 border-none rounded-xl focus-visible:ring-red-600 focus-visible:bg-white dark:focus-visible:bg-slate-700 transition-all w-full dark:text-white font-bold"
+                  />
+               </form>
+            </div>
 
-          <div className="flex items-center gap-4 md:gap-6 shrink-0">
-            <ModeToggle />
+            <div className="flex items-center gap-4 md:gap-6 shrink-0">
+              <ModeToggle />
 
-            <Button variant="ghost" size="icon" className="relative text-slate-500 dark:text-slate-400 rounded-xl">
-              <Bell className="w-5 h-5" />
-              <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
-            </Button>
+              <Button variant="ghost" size="icon" className="relative text-slate-500 dark:text-slate-400 rounded-xl">
+                <Bell className="w-5 h-5" />
+                <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border-2 border-white dark:border-slate-900"></span>
+              </Button>
 
-            <div className="flex items-center gap-3 pl-4 border-l dark:border-slate-800">
-              <div className="hidden sm:block text-right">
-                <div className="text-sm font-black text-slate-800 dark:text-white truncate max-w-[120px] uppercase tracking-tight">{userName}</div>
-                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400">{userRole}</div>
+              <div className="flex items-center gap-3 pl-4 border-l dark:border-slate-800">
+                <div className="hidden sm:block text-right">
+                  <div className="text-sm font-black text-slate-800 dark:text-white truncate max-w-[120px] uppercase tracking-tight">{userName}</div>
+                  <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400">{userRole}</div>
+                </div>
+                <Avatar className="h-10 w-10 border-2 border-red-100 dark:border-red-900/50 p-0.5 rounded-full">
+                  <AvatarImage src={userAvatar} className="rounded-full" />
+                  <AvatarFallback className="rounded-full font-black bg-slate-100 dark:bg-slate-800 text-slate-400">{userName.charAt(0)}</AvatarFallback>
+                </Avatar>
               </div>
-              <Avatar className="h-10 w-10 border-2 border-red-100 dark:border-red-900/50 p-0.5 rounded-full">
-                <AvatarImage src={userAvatar} className="rounded-full" />
-                <AvatarFallback className="rounded-full font-black bg-slate-100 dark:bg-slate-800 text-slate-400">{userName.charAt(0)}</AvatarFallback>
-              </Avatar>
             </div>
           </div>
         </header>
 
         {/* Content Area */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50 dark:bg-slate-950 text-left">
-           <Outlet />
-        </main>
-      </div>
+        <main className="flex-1 overflow-y-auto bg-slate-50/50 dark:bg-slate-950 p-4 md:p-8">
+           <div className="max-w-[1400px] mx-auto w-full">
+              <Outlet />
+           </div>
+        </main>      </div>
     </div>
   )
 }
@@ -216,4 +218,5 @@ export const Route = createFileRoute('/dashboard')({
   },
   component: DashboardLayout,
   pendingComponent: DashboardPending,
+})DashboardPending,
 })
