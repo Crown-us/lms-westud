@@ -91,7 +91,7 @@ function LoginPage() {
           data: {
             role: selectedRole
           }
-        },
+        } as any,
       })
       if (error) throw error
     } catch (err: any) {
