@@ -11,54 +11,49 @@ function AuthCallbackPage() {
 
   useEffect(() => {
     const handleAuth = async () => {
-      const { data: { session }, error: sessionError } = await supabase.auth.getSession()
+      // 1. Pastikan Session sudah ada
+      const { data: { session } } = await supabase.auth.getSession()
       
-      if (sessionError) {
-        console.error("Session error:", sessionError)
-        return navigate({ to: '/login' })
-      }
-
       if (session) {
-        // Ambil role dari URL atau dari LocalStorage (backup buat mobile)
+        // Ambil role dari URL atau LocalStorage
         const role = search.role || localStorage.getItem('pending_role')
-        console.log("Syncing role:", role)
         
         if (role) {
-          try {
-            // 1. Update Auth Metadata Supabase
-            await supabase.auth.updateUser({ data: { role } })
+          console.log("Memulai sinkronisasi role ke:", role)
+          
+          // 2. Panggil Fungsi SQL Nuklir (RPC)
+          // Kita pakai RPC supaya bypass RLS dan dieksekusi di sisi server database
+          const { error: rpcError } = await supabase.rpc('set_user_role', { 
+            target_role: role 
+          })
 
-            // 2. Maksa Update/Insert ke Tabel Profiles (UPSERT)
-            // Ini yang paling krusial buat nembus trigger DB yang telat
-            await supabase
-              .from('profiles')
-              .upsert({
-                id: session.user.id,
-                email: session.user.email,
-                role: role,
-                name: session.user.user_metadata.full_name || session.user.email?.split('@')[0],
-                avatar_url: session.user.user_metadata.avatar_url
-              }, { onConflict: 'id' })
-            
-            // Bersihkan backup
-            localStorage.removeItem('pending_role')
-            
-            // 3. PENTING: Hapus cache profile biar dashboard nggak pake data lama (siswa)
-            await queryClient.invalidateQueries({ queryKey: ['profile', session.user.id] })
-            
-            console.log("Role sync successful as:", role)
-          } catch (e) {
-            console.error("Sync failed:", e)
+          if (rpcError) {
+            console.error("RPC Error, mencoba cara manual:", rpcError)
+            // Backup cara manual kalau RPC belum dipasang
+            await supabase.from('profiles').update({ role }).eq('id', session.user.id)
           }
+
+          // 3. Update metadata auth user (buat jaga-jaga)
+          await supabase.auth.updateUser({ data: { role } })
+          
+          // 4. Bersihkan memori
+          localStorage.removeItem('pending_role')
+          
+          // 5. PENTING: Paksa hapus cache profil agar aplikasi narik data terbaru (GURU)
+          await queryClient.invalidateQueries({ queryKey: ['profile'] })
+          await queryClient.refetchQueries({ queryKey: ['profile', session.user.id] })
+          
+          console.log("Sinkronisasi Berhasil!")
         }
         
-        // Delay 1 detik buat mastiin database beneran selesai nulis
+        // Kasih jeda sedikit biar state di AuthProvider sempet ke-reset
         setTimeout(() => {
           navigate({ to: '/dashboard' })
-        }, 1000)
+        }, 1500)
       } else {
-        // Kalau nggak ada session, balik login
-        navigate({ to: '/login' })
+        // Tunggu sebentar kalau session belum muncul (biasa di mobile)
+        const timeout = setTimeout(() => navigate({ to: '/login' }), 5000)
+        return () => clearTimeout(timeout)
       }
     }
 
@@ -66,15 +61,17 @@ function AuthCallbackPage() {
   }, [navigate, search.role, queryClient])
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
-      <div className="text-center space-y-6">
-        <div className="relative w-16 h-16 mx-auto">
-          <Loader2 className="w-16 h-16 animate-spin text-red-600" />
-          <div className="absolute inset-0 blur-xl bg-red-600/20 animate-pulse rounded-full" />
+    <div className="min-h-screen flex items-center justify-center bg-white dark:bg-slate-950">
+      <div className="text-center space-y-8 p-6">
+        <div className="relative w-20 h-20 mx-auto">
+          <Loader2 className="w-20 h-20 animate-spin text-red-600" />
+          <div className="absolute inset-0 blur-2xl bg-red-600/20 animate-pulse rounded-full" />
         </div>
-        <div className="space-y-2">
-          <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-800 dark:text-white">Sinkronisasi Akun</h2>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menyiapkan profil Anda...</p>
+        <div className="space-y-3">
+          <h2 className="text-xl font-black italic tracking-tighter text-slate-900 dark:text-white">MENYIAPKAN AKSES {search.role?.toUpperCase() || 'USER'}...</h2>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-[0.3em] max-w-[200px] mx-auto leading-relaxed">
+            Sedang mensinkronisasi profil anda dengan database kami.
+          </p>
         </div>
       </div>
     </div>
