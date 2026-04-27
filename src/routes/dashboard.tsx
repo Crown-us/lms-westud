@@ -92,16 +92,16 @@ function DashboardLayout() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-[50] lg:relative lg:flex bg-white dark:bg-slate-900 border-r dark:border-slate-800 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0 w-20 lg:w-64'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-[50] lg:relative lg:translate-x-0 bg-white dark:bg-slate-900 border-r dark:border-slate-800 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full w-72 lg:w-64'}`}>
         <div className="p-6 mb-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             <div className="bg-red-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-red-100 dark:shadow-none shrink-0">
               <span className="text-white font-bold text-xl font-black">W</span>
             </div>
-            <span className={`font-black text-xl text-slate-800 dark:text-white tracking-tighter transition-opacity duration-300 ${!isSidebarOpen && 'lg:hidden'}`}>WeStud</span>
+            <span className="font-black text-xl text-slate-800 dark:text-white tracking-tighter">WeStud</span>
           </Link>
           <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden rounded-xl">
-            <X className="w-5 h-5" />
+            <X className="w-5 h-5 text-slate-500" />
           </Button>
         </div>
 
@@ -111,21 +111,21 @@ function DashboardLayout() {
               key={item.label}
               to={item.to}
               onClick={() => setIsSidebarOpen(false)}
-              className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 transition-all group [&.active]:bg-red-600 [&.active]:text-white [&.active]:shadow-lg [&.active]:shadow-red-100 dark:[&.active]:shadow-none"
+              className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 transition-all group [&.active]:bg-red-600 [&.active]:text-white [&.active]:shadow-lg [&.active]:shadow-red-100 dark:[&.active]:shadow-none"
             >
               <item.icon className="w-5 h-5 shrink-0" />
-              <span className={`font-semibold text-left transition-opacity duration-300 ${!isSidebarOpen && 'lg:hidden'}`}>{item.label}</span>
+              <span className="font-semibold text-left">{item.label}</span>
             </Link>
           ))}
         </nav>
 
-        <div className="p-4 mt-auto border-t dark:border-slate-800 text-left">
+        <div className="p-4 mt-auto border-t dark:border-slate-800">
           <button 
             onClick={handleLogout}
-            className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all w-full group"
+            className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-600 dark:text-slate-300 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all w-full group"
           >
             <LogOut className="w-5 h-5 shrink-0" />
-            <span className={`font-semibold transition-opacity duration-300 ${!isSidebarOpen && 'lg:hidden'}`}>Keluar</span>
+            <span className="font-semibold text-left">Keluar</span>
           </button>
         </div>
       </aside>
@@ -136,7 +136,7 @@ function DashboardLayout() {
         <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-4 lg:px-8 shrink-0">
           <div className="flex items-center gap-4 flex-1 text-left min-w-0">
              <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="lg:hidden rounded-xl shrink-0">
-                <Menu className="w-5 h-5" />
+                <Menu className="w-5 h-5 text-slate-600 dark:text-slate-300" />
              </Button>
              
              <form onSubmit={handleSearch} className="relative w-full max-w-xl hidden sm:block">
@@ -160,31 +160,20 @@ function DashboardLayout() {
 
             <div className="flex items-center gap-3 pl-4 border-l dark:border-slate-800">
               <div className="hidden sm:block text-right">
-                <div className="text-sm font-bold text-slate-800 dark:text-white truncate max-w-[120px]">{userName}</div>
-                <div className="text-[10px] font-black uppercase tracking-widest text-red-500 dark:text-red-400">{userRole}</div>
+                <div className="text-sm font-black text-slate-800 dark:text-white truncate max-w-[120px] uppercase tracking-tight">{userName}</div>
+                <div className="text-[10px] font-black uppercase tracking-[0.2em] text-red-600 dark:text-red-400">{userRole}</div>
               </div>
               <Avatar className="h-10 w-10 border-2 border-red-100 dark:border-red-900/50 p-0.5 rounded-full">
                 <AvatarImage src={userAvatar} className="rounded-full" />
-                <AvatarFallback className="rounded-full font-bold">{userName.charAt(0)}</AvatarFallback>
+                <AvatarFallback className="rounded-full font-black bg-slate-100 dark:bg-slate-800 text-slate-400">{userName.charAt(0)}</AvatarFallback>
               </Avatar>
             </div>
           </div>
         </header>
 
-        {/* Animated Dashboard Content */}
-        <main className="flex-1 overflow-y-auto p-4 md:p-8 text-left bg-slate-50/50 dark:bg-slate-950">
-           <AnimatePresence mode="wait">
-              <motion.div
-                key={location.pathname}
-                initial={{ opacity: 0, y: 10 }}
-                animate={{ opacity: 1, y: 0 }}
-                exit={{ opacity: 0, y: -10 }}
-                transition={{ duration: 0.2 }}
-                className="h-full"
-              >
-                 <Outlet />
-              </motion.div>
-           </AnimatePresence>
+        {/* Content Area */}
+        <main className="flex-1 overflow-y-auto p-4 md:p-8 bg-slate-50/50 dark:bg-slate-950 text-left">
+           <Outlet />
         </main>
       </div>
     </div>
