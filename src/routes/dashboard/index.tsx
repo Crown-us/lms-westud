@@ -71,7 +71,7 @@ function DashboardHome() {
           </Link>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 text-left">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-6 text-left">
            {[
              { label: 'Total Murid', value: gData.stats.totalStudents, icon: Users, color: 'text-blue-600', bg: 'bg-blue-50 dark:bg-blue-900/20' },
              { label: 'Estimasi Pendapatan', value: gData.stats.revenue, icon: DollarSign, color: 'text-green-600', bg: 'bg-green-50 dark:bg-green-900/20' },
@@ -79,7 +79,7 @@ function DashboardHome() {
              { label: 'Kursus Aktif', value: gData.stats.activeCourses, icon: BookOpen, color: 'text-red-600', bg: 'bg-red-50 dark:bg-red-900/20' },
            ].map((stat, i) => (
              <motion.div key={i} variants={item}>
-                <Card className="border-none shadow-sm rounded-[2rem] bg-white dark:bg-slate-900 p-6 overflow-hidden relative">
+                <Card className="border-none shadow-sm rounded-[2rem] bg-white dark:bg-slate-900 p-5 md:p-6 overflow-hidden relative">
                    <div className="flex items-center gap-4 relative z-10">
                       <div className={`${stat.bg} ${stat.color} p-4 rounded-2xl`}>
                          <stat.icon className="w-6 h-6" />
@@ -162,9 +162,9 @@ function DashboardHome() {
 
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-8">
           <div className="lg:col-span-2 space-y-8">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-4 md:gap-6">
                <motion.div variants={item}>
-                  <Card className="border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-8 flex flex-col justify-between h-[180px]">
+                  <Card className="border-none shadow-sm rounded-[2rem] md:rounded-[2.5rem] bg-white dark:bg-slate-900 p-6 md:p-8 flex flex-col justify-between h-[160px] md:h-[180px]">
                      <div className="bg-orange-50 dark:bg-orange-900/30 text-orange-500 w-fit p-3 rounded-xl">
                         <Clock className="w-5 h-5" />
                      </div>
@@ -175,7 +175,7 @@ function DashboardHome() {
                   </Card>
                </motion.div>
                <motion.div variants={item}>
-                  <Card className="border-none shadow-sm rounded-[2.5rem] bg-white dark:bg-slate-900 p-8 flex flex-col justify-between h-[180px]">
+                  <Card className="border-none shadow-sm rounded-[2rem] md:rounded-[2.5rem] bg-white dark:bg-slate-900 p-6 md:p-8 flex flex-col justify-between h-[160px] md:h-[180px]">
                      <div className="bg-green-50 dark:bg-green-900/30 text-green-500 w-fit p-3 rounded-xl">
                         <CheckCircle2 className="w-5 h-5" />
                      </div>

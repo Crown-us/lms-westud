@@ -34,7 +34,7 @@ function DashboardPending() {
 }
 
 function DashboardLayout() {
-  const isSidebarOpen = true
+  const [isSidebarOpen, setIsSidebarOpen] = React.useState(false)
   const location = useLocation()
   const navigate = useNavigate()
   const [globalSearch, setGlobalSearch] = React.useState('')
@@ -75,18 +75,32 @@ function DashboardLayout() {
   ]
 
   return (
-    <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans transition-colors duration-300">
-      {/* Sidebar ... (no changes to sidebar UI) */}
-      <aside className={`bg-white dark:bg-slate-900 border-r dark:border-slate-800 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'w-64' : 'w-20'}`}>
-        <div className="p-6 mb-4 text-left">
-          <div className="flex items-center gap-3">
-            <Link to="/" className="flex items-center gap-3">
-              <div className="bg-red-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-red-100 dark:shadow-none">
-                <span className="text-white font-bold text-xl font-black">W</span>
-              </div>
-              {isSidebarOpen && <span className="font-black text-xl text-slate-800 dark:text-white tracking-tighter">WeStud</span>}
-            </Link>
-          </div>
+    <div className="flex h-screen bg-slate-50 dark:bg-slate-950 overflow-hidden font-sans transition-colors duration-300 relative">
+      {/* Mobile Backdrop */}
+      <AnimatePresence>
+        {isSidebarOpen && (
+          <motion.div 
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            onClick={() => setIsSidebarOpen(false)}
+            className="fixed inset-0 bg-slate-950/60 backdrop-blur-sm z-[40] lg:hidden"
+          />
+        )}
+      </AnimatePresence>
+
+      {/* Sidebar */}
+      <aside className={`fixed inset-y-0 left-0 z-[50] lg:relative lg:flex bg-white dark:bg-slate-900 border-r dark:border-slate-800 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0 w-20 lg:w-64'}`}>
+        <div className="p-6 mb-4 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-3">
+            <div className="bg-red-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-red-100 dark:shadow-none shrink-0">
+              <span className="text-white font-bold text-xl font-black">W</span>
+            </div>
+            <span className={`font-black text-xl text-slate-800 dark:text-white tracking-tighter transition-opacity duration-300 ${!isSidebarOpen && 'lg:hidden'}`}>WeStud</span>
+          </Link>
+          <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(false)} className="lg:hidden rounded-xl">
+            <X className="w-5 h-5" />
+          </Button>
         </div>
 
         <nav className="flex-1 px-4 space-y-2">
@@ -94,10 +108,11 @@ function DashboardLayout() {
             <Link
               key={item.label}
               to={item.to}
+              onClick={() => setIsSidebarOpen(false)}
               className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/50 hover:text-red-600 dark:hover:text-red-400 transition-all group [&.active]:bg-red-600 [&.active]:text-white [&.active]:shadow-lg [&.active]:shadow-red-100 dark:[&.active]:shadow-none"
             >
-              <item.icon className="w-5 h-5" />
-              {isSidebarOpen && <span className="font-semibold text-left">{item.label}</span>}
+              <item.icon className="w-5 h-5 shrink-0" />
+              <span className={`font-semibold text-left transition-opacity duration-300 ${!isSidebarOpen && 'lg:hidden'}`}>{item.label}</span>
             </Link>
           ))}
         </nav>
@@ -107,8 +122,8 @@ function DashboardLayout() {
             onClick={handleLogout}
             className="flex items-center gap-4 px-4 py-3 rounded-xl text-slate-500 dark:text-slate-400 hover:bg-red-50 dark:hover:bg-red-900/20 hover:text-red-600 transition-all w-full group"
           >
-            <LogOut className="w-5 h-5" />
-            {isSidebarOpen && <span className="font-semibold">Keluar</span>}
+            <LogOut className="w-5 h-5 shrink-0" />
+            <span className={`font-semibold transition-opacity duration-300 ${!isSidebarOpen && 'lg:hidden'}`}>Keluar</span>
           </button>
         </div>
       </aside>
@@ -116,9 +131,13 @@ function DashboardLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col overflow-hidden">
         {/* Header */}
-        <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-8 shrink-0">
-          <div className="flex items-center gap-4 flex-1 max-w-xl text-left">
-             <form onSubmit={handleSearch} className="relative w-full">
+        <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 flex items-center justify-between px-4 lg:px-8 shrink-0">
+          <div className="flex items-center gap-4 flex-1 text-left">
+             <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="lg:hidden rounded-xl shrink-0">
+                <Menu className="w-5 h-5" />
+             </Button>
+             
+             <form onSubmit={handleSearch} className="relative w-full max-w-xl hidden sm:block">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 w-4 h-4 text-slate-400" />
                 <Input 
                   value={globalSearch}

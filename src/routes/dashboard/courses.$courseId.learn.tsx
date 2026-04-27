@@ -489,7 +489,7 @@ function ClassroomPage() {
               <div className="bg-black aspect-video w-full relative">
                 <VideoPlayer url={activeLesson.content_url} />
               </div>
-              <div className="p-8 max-w-5xl mx-auto w-full">
+              <div className="p-4 md:p-8 max-w-5xl mx-auto w-full">
                  <div className="flex flex-col md:flex-row md:items-center justify-between gap-4 mb-8">
                     <div>
                        <Badge className="bg-red-50 text-red-600 border-none font-black text-[10px] mb-2 uppercase tracking-widest">Materi Sekarang</Badge>
@@ -603,6 +603,19 @@ function ClassroomPage() {
                                    <div className="text-xs font-black truncate">{quiz.title}</div>
                                 </div>
                                 <Badge className="bg-red-100 text-red-600 border-none font-black text-[9px]">QUIZ</Badge>
+                             </button>
+                          ))}
+                       </div>
+                    </div>
+                 ))}
+              </div>
+           </ScrollArea>
+        </aside>
+      </div>
+    </div>
+  )
+}
+ack text-[9px]">QUIZ</Badge>
                              </button>
                           ))}
                        </div>
