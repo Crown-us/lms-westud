@@ -91,7 +91,7 @@ function DashboardLayout() {
       </AnimatePresence>
 
       {/* Sidebar */}
-      <aside className={`fixed inset-y-0 left-0 z-[50] lg:relative lg:translate-x-0 bg-white dark:bg-slate-900 border-r dark:border-slate-800 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full w-72 lg:w-64'}`}>
+      <aside className={`fixed inset-y-0 left-0 z-[50] lg:relative bg-white dark:bg-slate-900 border-r dark:border-slate-800 transition-all duration-300 flex flex-col ${isSidebarOpen ? 'translate-x-0 w-72' : '-translate-x-full lg:translate-x-0 w-72 lg:w-64'}`}>
         <div className="p-6 mb-4 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-3">
             <div className="bg-red-600 w-10 h-10 rounded-xl flex items-center justify-center shadow-lg shadow-red-100 dark:shadow-none shrink-0">
@@ -132,7 +132,7 @@ function DashboardLayout() {
       {/* Main Content Area */}
       <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
         {/* Header */}
-        <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 shrink-0">
+        <header className="h-20 bg-white dark:bg-slate-900 border-b dark:border-slate-800 shrink-0 z-30">
           <div className="max-w-[1400px] mx-auto w-full h-full flex items-center justify-between px-4 lg:px-8">
             <div className="flex items-center gap-4 flex-1 text-left min-w-0">
                <Button variant="ghost" size="icon" onClick={() => setIsSidebarOpen(true)} className="lg:hidden rounded-xl shrink-0">
