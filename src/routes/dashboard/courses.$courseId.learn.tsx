@@ -615,16 +615,29 @@ function ClassroomPage() {
     </div>
   )
 }
-ack text-[9px]">QUIZ</Badge>
-                             </button>
-                          ))}
-                       </div>
-                    </div>
-                 ))}
-              </div>
-           </ScrollArea>
-        </aside>
-      </div>
-    </div>
-  )
-}
+
+export const Route = createFileRoute('/dashboard/courses/$courseId/learn')({
+  beforeLoad: async ({ params, context }) => {
+    const user = context.auth.user
+    if (!user) throw redirect({ to: '/login', search: { redirect: `/dashboard/courses/${params.courseId}/learn` } })
+    
+    // Safety check: Ensure user is enrolled
+    const { data: enrollment } = await supabase
+      .from('enrollments')
+      .select('id')
+      .eq('course_id', params.courseId)
+      .eq('student_id', user.id)
+      .maybeSingle()
+    
+    if (!enrollment) {
+      throw redirect({ to: '/courses/$courseId', params: { courseId: params.courseId } })
+    }
+  },
+  loader: async ({ params, context: { queryClient, auth } }) => {
+    await Promise.all([
+      queryClient.ensureQueryData(courseQueries.classroom(params.courseId)),
+      queryClient.ensureQueryData(courseQueries.progress(params.courseId, auth.user?.id))
+    ])
+  },
+  component: ClassroomPage,
+})
