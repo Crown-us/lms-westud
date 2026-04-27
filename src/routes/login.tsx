@@ -64,14 +64,11 @@ function LoginPage() {
     try {
       // Backup role ke localStorage buat jaga-jaga kalau redirect mobile bermasalah
       localStorage.setItem('pending_role', selectedRole)
-      
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
           redirectTo: `${window.location.origin}/auth/callback?role=${selectedRole}`,
-          data: {
-            role: selectedRole
-          }
         },
       })
       if (error) throw error
@@ -83,15 +80,12 @@ function LoginPage() {
   const handleGithubLogin = async () => {
     try {
       localStorage.setItem('pending_role', selectedRole)
-      
+
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
           redirectTo: `${window.location.origin}/auth/callback?role=${selectedRole}`,
-          data: {
-            role: selectedRole
-          }
-        } as any,
+        },
       })
       if (error) throw error
     } catch (err: any) {
