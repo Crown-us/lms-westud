@@ -61,15 +61,13 @@ function LoginPage() {
   }
 
   const handleGoogleLogin = async () => {
-    console.log('Logging in as:', selectedRole) // Debugging
     try {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?role=${selectedRole}`,
           data: {
-            role: selectedRole,
-            full_name: 'User' // Fallback for name
+            role: selectedRole
           }
         },
       })
@@ -84,7 +82,7 @@ function LoginPage() {
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
-          redirectTo: `${window.location.origin}/auth/callback`,
+          redirectTo: `${window.location.origin}/auth/callback?role=${selectedRole}`,
           data: {
             role: selectedRole
           }
