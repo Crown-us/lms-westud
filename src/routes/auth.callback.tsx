@@ -2,10 +2,12 @@ import { createFileRoute, useNavigate } from '@tanstack/react-router'
 import { useEffect } from 'react'
 import { supabase } from '@/lib/supabase'
 import { Loader2 } from 'lucide-react'
+import { useQueryClient } from '@tanstack/react-query'
 
 function AuthCallbackPage() {
   const navigate = useNavigate()
   const search = Route.useSearch()
+  const queryClient = useQueryClient()
 
   useEffect(() => {
     const handleAuth = async () => {
@@ -17,62 +19,51 @@ function AuthCallbackPage() {
       }
 
       if (session) {
-        const role = search.role
-        console.log("User detected, role from URL:", role)
+        // Ambil role dari URL atau dari LocalStorage (backup buat mobile)
+        const role = search.role || localStorage.getItem('pending_role')
+        console.log("Syncing role:", role)
         
         if (role) {
           try {
-            // 1. Update Auth Metadata (Supabase Internal)
-            const { error: authError } = await supabase.auth.updateUser({
-              data: { role: role }
-            })
-            if (authError) console.error("Auth metadata update error:", authError)
+            // 1. Update Auth Metadata Supabase
+            await supabase.auth.updateUser({ data: { role } })
 
-            // 2. Update Profiles Table
-            const { error: profileError } = await supabase
+            // 2. Maksa Update/Insert ke Tabel Profiles (UPSERT)
+            // Ini yang paling krusial buat nembus trigger DB yang telat
+            await supabase
               .from('profiles')
-              .update({ role })
-              .eq('id', session.user.id)
-            
-            if (profileError) {
-              console.error("Profile table update error:", profileError)
-              // Kalau update gagal, coba insert (jaga-jaga kalau trigger gagal)
-              await supabase.from('profiles').upsert({
+              .upsert({
                 id: session.user.id,
                 email: session.user.email,
                 role: role,
-                name: session.user.user_metadata.full_name || session.user.email?.split('@')[0]
-              })
-            }
+                name: session.user.user_metadata.full_name || session.user.email?.split('@')[0],
+                avatar_url: session.user.user_metadata.avatar_url
+              }, { onConflict: 'id' })
             
-            console.log("Role update sequence completed")
+            // Bersihkan backup
+            localStorage.removeItem('pending_role')
+            
+            // 3. PENTING: Hapus cache profile biar dashboard nggak pake data lama (siswa)
+            await queryClient.invalidateQueries({ queryKey: ['profile', session.user.id] })
+            
+            console.log("Role sync successful as:", role)
           } catch (e) {
-            console.error("Unexpected error during role sync:", e)
+            console.error("Sync failed:", e)
           }
         }
         
-        // Kasih delay dikit biar update-nya masuk ke DB sebelum pindah
+        // Delay 1 detik buat mastiin database beneran selesai nulis
         setTimeout(() => {
           navigate({ to: '/dashboard' })
-        }, 800)
+        }, 1000)
       } else {
-        // Fallback listener
-        const { data: { subscription } } = supabase.auth.onAuthStateChange(async (event, session) => {
-          if (session && (event === 'SIGNED_IN' || event === 'INITIAL_SESSION')) {
-            const role = search.role
-            if (role) {
-              await supabase.from('profiles').update({ role }).eq('id', session.user.id)
-              await supabase.auth.updateUser({ data: { role } })
-            }
-            navigate({ to: '/dashboard' })
-            subscription.unsubscribe()
-          }
-        })
+        // Kalau nggak ada session, balik login
+        navigate({ to: '/login' })
       }
     }
 
     handleAuth()
-  }, [navigate, search.role])
+  }, [navigate, search.role, queryClient])
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-slate-50 dark:bg-slate-950">
@@ -83,7 +74,7 @@ function AuthCallbackPage() {
         </div>
         <div className="space-y-2">
           <h2 className="text-sm font-black uppercase tracking-[0.3em] text-slate-800 dark:text-white">Sinkronisasi Akun</h2>
-          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Mohon tunggu sebentar...</p>
+          <p className="text-[10px] font-bold text-slate-400 uppercase tracking-widest">Menyiapkan profil Anda...</p>
         </div>
       </div>
     </div>

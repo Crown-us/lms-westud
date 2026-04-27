@@ -62,6 +62,9 @@ function LoginPage() {
 
   const handleGoogleLogin = async () => {
     try {
+      // Backup role ke localStorage buat jaga-jaga kalau redirect mobile bermasalah
+      localStorage.setItem('pending_role', selectedRole)
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'google',
         options: {
@@ -79,6 +82,8 @@ function LoginPage() {
 
   const handleGithubLogin = async () => {
     try {
+      localStorage.setItem('pending_role', selectedRole)
+      
       const { error } = await supabase.auth.signInWithOAuth({
         provider: 'github',
         options: {
